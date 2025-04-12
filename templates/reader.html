@@ -2,25 +2,22 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Leitura limpa</title>
+    <title>{{ title }}</title>
     <style>
         body {
-            font-family: "Segoe UI", Roboto, Georgia, serif;
+            font-family: "Segoe UI", Georgia, serif;
             background-color: #fefefe;
             color: #222;
-            margin: 0;
             padding: 60px 20px;
             max-width: 750px;
-            line-height: 1.8;
+            margin: auto;
             font-size: 18px;
-            margin-left: auto;
-            margin-right: auto;
+            line-height: 1.8;
         }
 
         h1 {
             font-size: 2.8em;
-            font-weight: bold;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             color: #111;
         }
 
@@ -29,26 +26,18 @@
             text-align: justify;
         }
 
-        img {
-            max-width: 100%;
-            display: block;
-            margin: 20px auto;
-        }
-
         a {
             color: #0066cc;
             text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <h1>{{ title }}</h1>
     <div>
-        {{ content | safe }}
+        {% for paragraph in paragraphs %}
+            <p>{{ paragraph }}</p>
+        {% endfor %}
     </div>
 </body>
 </html>
