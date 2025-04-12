@@ -1,0 +1,22 @@
+# Ignora o ambiente virtual
+.venv/
+venv/
+
+# Ignora arquivos compilados
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Cache do editor
+*.log
+*.swp
+*.swo
+
+# VS Code
+.vscode/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+tree.txt

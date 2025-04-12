@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Leitura limpa</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      margin: 40px auto;
+      max-width: 700px;
+      line-height: 1.6;
+      font-size: 18px;
+      color: #333;
+      background: #f9f9f9;
+    }
+    a {
+      color: #007acc;
+      text-decoration: none;
+    }
+    img {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <p><a href="{{ original_url }}" target="_blank">↩ Voltar ao artigo original</a></p>
+  <hr>
+  {{ content | safe }}
+</body>
+</html>
