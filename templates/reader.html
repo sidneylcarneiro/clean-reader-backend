@@ -5,34 +5,50 @@
     <title>Leitura limpa</title>
     <style>
         body {
-            font-family: Georgia, 'Times New Roman', serif;
-            background-color: #fdfdfd;
-            color: #333;
-            padding: 60px;
-            line-height: 1.7;
-            max-width: 800px;
-            margin: auto;
+            font-family: "Segoe UI", Roboto, Georgia, serif;
+            background-color: #fefefe;
+            color: #222;
+            margin: 0;
+            padding: 60px 20px;
+            max-width: 750px;
+            line-height: 1.8;
+            font-size: 18px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         h1 {
-            font-size: 2.5em;
+            font-size: 2.8em;
+            font-weight: bold;
             margin-bottom: 30px;
             color: #111;
         }
 
         p {
-            font-size: 1.2em;
             margin-bottom: 20px;
             text-align: justify;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+            margin: 20px auto;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <h1>{{ title }}</h1>
     <div>
-        {% for paragraph in content %}
-            <p>{{ paragraph }}</p>
-        {% endfor %}
+        {{ content | safe }}
     </div>
 </body>
 </html>
