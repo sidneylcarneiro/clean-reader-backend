@@ -3,8 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+
 import trafilatura
 from lxml import etree
+from bs4 import BeautifulSoup
 import requests
 from readability import Document
 
@@ -24,38 +26,42 @@ class PageRequest(BaseModel):
 
 @app.post("/extract", response_class=HTMLResponse)
 async def extract(req: PageRequest):
-    # Primeira tentativa com trafilatura
-    downloaded = trafilatura.fetch_url(req.url)
     title = "Leitura limpa"
-    paragraphs = []
+    rendered_html = None
 
+    # Tenta com Trafilatura
+    downloaded = trafilatura.fetch_url(req.url)
     if downloaded:
-        extracted_xml = trafilatura.extract(downloaded, output_format='xml', include_images=True)
-        if extracted_xml:
+        content = trafilatura.extract(downloaded, include_images=True, output_format='xml')
+        if content:
             try:
-                tree = etree.fromstring(extracted_xml.encode())
-                title = tree.findtext("title", default=title)
-                paragraphs = [p.text for p in tree.findall(".//p") if p.text]
+                soup = BeautifulSoup(content, 'xml')
+                title = soup.find('title').text if soup.find('title') else title
+                html_body = soup.find('body')
+                if html_body:
+                    rendered_html = str(html_body)
             except Exception as e:
-                print("Erro ao parsear XML do Trafilatura:", e)
+                print("Erro ao processar com Trafilatura + BeautifulSoup:", e)
 
-    # Fallback com readability-lxml se necessário
-    if not paragraphs:
+    # Fallback com Readability-lxml
+    if not rendered_html:
         try:
             response = requests.get(req.url, timeout=10)
             doc = Document(response.text)
             title = doc.short_title()
             html_content = doc.summary()
 
-            # Parseia HTML da summary
-            parsed = etree.HTML(html_content)
-            paragraphs = [el.text for el in parsed.findall(".//p") if el.text]
+            # Repassa o HTML diretamente
+            rendered_html = html_content
         except Exception as e:
             return HTMLResponse(content=f"<h1>Erro total ao extrair conteúdo</h1><p>{str(e)}</p>", status_code=500)
+
+    if not rendered_html:
+        return HTMLResponse(content="<h1>Conteúdo não encontrado</h1>", status_code=404)
 
     return templates.TemplateResponse("reader.html", {
         "request": {},
         "title": title,
-        "paragraphs": paragraphs,
+        "content": rendered_html,
         "original_url": req.url
     })
